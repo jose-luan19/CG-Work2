@@ -138,3 +138,4 @@ ax.set_ylabel("Y")
 
 # Exibição do plot
 plt.show()
+ 

@@ -537,3 +537,4 @@ ax.legend()
 
 # Exibição do gráfico
 plt.show()
+ 
