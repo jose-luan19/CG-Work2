@@ -1,7 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import utils.utils as util
-
 
 class Tronco_piramide(util.Solido):
     def __init__(self, aresta_inferior, aresta_superior, altura, ponto_inicial):
@@ -87,11 +85,11 @@ class Tronco_piramide(util.Solido):
         self.gerar_coordenadas()
         
 
+if __name__ == "__main__":
 
-# Tronco Piramide
-tronco = Tronco_piramide(2, 1, 3, (-9, -3, -8))
-tronco.gerar_solido()
-tronco.plota_solido()
+    # Tronco Piramide
+    tronco = Tronco_piramide(2, 1, 3, (-9, -3, -8))
+    tronco.gerar_solido()
+    axes = tronco.plota_solido(util.create_figure())
+    util.show_figure(axes)
 
-
-plt.show()

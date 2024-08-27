@@ -49,7 +49,6 @@ class Cone(util.Solido):
 
         contador = 0
         x, y, z = self.gerar_coordenadas()
-        print(x)
         for i in range(self.num_slices):
             for j in range(len(x[i])):
                 self.pontosX.append(x[i][j])
@@ -63,15 +62,16 @@ class Cone(util.Solido):
             for circles in range(len(x[i])):
                 self.arestas.append([i, i + self.num_slices * circles])
 
+if __name__ == "__main__":
 
-# Cone
-radius = 1.0
-height = 2 * radius
-num_slices = 10
-ponto_inicial_cone = [0, 0, 0]
+    # Cone
+    radius = 1.0
+    height = 2 * radius
+    num_slices = 10
+    ponto_inicial_cone = [0, 0, 0]
 
-cone = Cone(radius, height, num_slices, ponto_inicial_cone)
-cone.gerar_solido()
-cone.plota_solido()
+    cone = Cone(radius, height, num_slices, ponto_inicial_cone)
+    cone.gerar_solido()
+    axes = cone.plota_solido(util.create_figure())
+    util.show_figure(axes)
 
-plt.show()

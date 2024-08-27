@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import utils.utils as util
 
 class Esfera(util.Solido):
@@ -44,15 +43,14 @@ class Esfera(util.Solido):
                     [j * (num_pontos + 1) + i, (j + 1) * (num_pontos + 1) + i]
                 )
 
+if __name__ == "__main__":
+    # Esfera
+    # Cria um objeto Esfera com raio 1 e ponto inicial (0, 0, 0)
+    esfera = Esfera(1, (7, -2, -6))
 
-# Esfera
-
-# Cria um objeto Esfera com raio 1 e ponto inicial (0, 0, 0)
-esfera = Esfera(1, (7, -2, -6))
-
-# Plota a esfera original
-esfera.gerar_solido()
-esfera.plota_solido()
+    # Plota a esfera original
+    esfera.gerar_solido()
+    axes = esfera.plota_solido(util.create_figure())
+    util.show_figure(axes)
 
 
-plt.show()

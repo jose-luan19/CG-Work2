@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import utils.utils as util
 
 class Cubo(util.Solido):
@@ -53,12 +52,12 @@ class Cubo(util.Solido):
     def gerar_solido(self):
         self.gerar_coordenadas()
 
-# Cubo
-raio_cubo = 1
-ponto_inicial_cubo = [-6, -8, -7]
+if __name__ == "__main__":
+    # Cubo
+    raio_cubo = 1
+    ponto_inicial_cubo = [-6, -8, -7]
 
-cubo = Cubo(raio_cubo, ponto_inicial_cubo)
-cubo.gerar_solido()
-cubo.plota_solido()
-
-plt.show()
+    cubo = Cubo(raio_cubo, ponto_inicial_cubo)
+    cubo.gerar_solido()
+    axes = cubo.plota_solido(util.create_figure())
+    util.show_figure(axes)

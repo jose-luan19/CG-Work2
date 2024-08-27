@@ -1,8 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import utils.utils as util
-
-
 
 class Cilindro(util.Solido):
     def __init__(self, raio, altura, ponto_inicial):
@@ -58,12 +55,13 @@ class Cilindro(util.Solido):
                 self.arestas.append([posicaov2, posicaov3])  # V
                 self.arestas.append([posicaov3, posicaov4])  # H
 
-# Cilindro  #ESCALADO (n do jeito que é pra ser)
-raio_cilindro = 1
-altura_cilindro = 2
-ponto_inicial_cilindro = [2, 4, 3]
-cilindro = Cilindro(raio_cilindro, altura_cilindro, ponto_inicial_cilindro)
-cilindro.gerar_solido()
-cilindro.plota_solido()
+if __name__ == "__main__":
 
-plt.show()
+    # Cilindro  #ESCALADO (n do jeito que é pra ser)
+    raio_cilindro = 1
+    altura_cilindro = 2
+    ponto_inicial_cilindro = [2, 4, 3]
+    cilindro = Cilindro(raio_cilindro, altura_cilindro, ponto_inicial_cilindro)
+    cilindro.gerar_solido()
+    axes = cilindro.plota_solido(util.create_figure())
+    util.show_figure(axes)
