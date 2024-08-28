@@ -1,22 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import utils.utils as util
 
 
 class Cone(util.Solido):
     def __init__(self, radius, height, num_slices, ponto_inicial):
-        """
-        Inicializa um objeto Cone com os parâmetros fornecidos.
-
-        Args:
-            radius (float): Raio do cone.
-            height (float): Altura do cone.
-            num_slices (int): Número de fatias (seções) do cone.
-            ponto_inicial (list): Lista contendo as coordenadas iniciais do cone.
-
-        Returns:
-            None
-        """
         self.radius = radius
         self.height = height
         self.num_slices = num_slices
@@ -34,12 +21,8 @@ class Cone(util.Solido):
 
         # diminuir o tamanho da base do cone ao longo da altura
         for i in range(self.num_slices):
-            x[i] = self.ponto_inicial[0] + self.radius * (
-                1 - z[i] / self.height
-            ) * np.cos(theta)
-            y[i] = self.ponto_inicial[1] + self.radius * (
-                1 - z[i] / self.height
-            ) * np.sin(theta)
+            x[i] = self.ponto_inicial[0] + self.radius * (1 - z[i] / self.height) * np.cos(theta)
+            y[i] = self.ponto_inicial[1] + self.radius * (1 - z[i] / self.height) * np.sin(theta)
             z_2d[i] = self.ponto_inicial[2] + z[i]
 
         return x, y, z_2d
