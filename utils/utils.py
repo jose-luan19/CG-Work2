@@ -1,5 +1,8 @@
+import os
 from matplotlib import pyplot as plt
 from abc import ABC, abstractmethod
+import inspect
+
 
 from matplotlib.axes import Axes
 import numpy as np
@@ -37,14 +40,14 @@ class Solido(ABC):
   def transladar_solido(self, dx, dy, dz):
     self.pontosX, self.pontosY, self.pontosZ = transladar(dx, dy, dz, self)
   
-  def convertWorldToCamera(self ,U, V, N, eye):
+  def converter_para_camera(self ,U, V, N, eye):
     RTMatrix = np.array(
-        [
-            [U[0], U[1], U[2], -np.dot(eye, U)],
-            [V[0], V[1], V[2], -np.dot(eye, V)],
-            [N[0], N[1], N[2], -np.dot(eye, N)],
-            [0, 0, 0, 1],
-        ]
+      [
+        [U[0], U[1], U[2], -np.dot(eye, U)],
+        [V[0], V[1], V[2], -np.dot(eye, V)],
+        [N[0], N[1], N[2], -np.dot(eye, N)],
+        [0, 0, 0, 1],
+      ]
     )
     lista_vertices = self.get_vertices_lista().T
     cameraVertexList = np.dot(
@@ -155,16 +158,28 @@ def include_legend(ax: Axes, eye, media_solidos):
   ax.scatter(0, 0, 0, color="m", label="origem")
   
   ax.legend()
+ 
 
 def show_figure(axes: Axes):
   axes.set_xlabel("X")
   axes.set_ylabel("Y")
   axes.set_zlabel("Z")
+  # Obter o nome do arquivo que chamou esta função
+  caller_frame = inspect.stack()[1]
+  caller_filename = caller_frame.filename
+  file_name = 'images/'+ os.path.splitext(os.path.basename(caller_filename))[0] + '.png'
+  
+  plt.savefig(file_name)
   plt.show()
 
 def show_figure2D(axes: Axes):
   axes.set_xlabel("X")
   axes.set_ylabel("Y")
+  caller_frame = inspect.stack()[1]
+  caller_filename = caller_frame.filename
+  file_name = 'images/'+ os.path.splitext(os.path.basename(caller_filename))[0] + '.png'
+  
+  plt.savefig(file_name)
   plt.show()
 
 def rotacionar(angle_x, angle_y, angle_z, solido: Solido):
