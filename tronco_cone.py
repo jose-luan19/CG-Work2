@@ -1,14 +1,13 @@
 import numpy as np
+from cone import Cone
 import utils.utils as util
 
 
-class TroncoCone(util.Solido):
+class TroncoCone(Cone):
     def __init__(self, raio_maior, raio_menor, altura, num_camadas, ponto_inicial):
         self.raio_maior = raio_maior
         self.raio_menor = raio_menor
-        self.altura = altura
-        self.num_camadas = num_camadas
-        super().__init__(ponto_inicial)
+        super().__init__(raio_maior, altura, num_camadas, ponto_inicial)
 
     def gerar_coordenadas(self):
         # Gera as coordenadas (x, y, z) do tronco de cone.
@@ -30,37 +29,19 @@ class TroncoCone(util.Solido):
 
         return x, y, z_2d
 
-    def gerar_solido(self):
-        # Gera os pontos e arestas do cone.
-
-        contador = 0
-        x, y, z = self.gerar_coordenadas()
-        
-        for i in range(self.num_camadas):
-            for j in range(len(x[i])):
-                self.pontosX.append(x[i][j]) # Adiciona as coordenadas x aos pontos do cone
-                self.pontosY.append(y[i][j]) # Adiciona as coordenadas y aos pontos do cone
-                self.pontosZ.append(z[i][j]) # Adiciona as coordenadas z aos pontos do cone
-                # H
-                if j < (len(x[i]) - 1):
-                    self.arestas.append([contador, contador + 1]) # Adiciona arestas horizontais
-                contador += 1
-            # V
-            for circles in range(len(x[i])):
-                self.arestas.append([i, i + self.num_camadas * circles]) # Adiciona arestas verticais
-
 if __name__ == "__main__":
 
     # Tronco de Cone
     raio_maior = 1.5  # Define o raio maior da base do tronco de cone
     raio_menor = 0.3  # Define o raio menor da base do tronco de cone
     altura = 2 * raio_maior  # Define a altura do tronco de cone como o dobro do raio maior
-    num_camadas = 20  # Define o número de camadas para a discretização do tronco de cone
+    num_camadas = 10  # Define o número de camadas para a discretização do tronco de cone
     ponto_inicial = [0, 0, 0]  # Define o ponto inicial do tronco de cone
 
     tronco_cone = TroncoCone(raio_maior, raio_menor, altura, num_camadas, ponto_inicial)
     # quantidade de pontos = num_camadas^2 
     # face representa por retangulos
     tronco_cone.gerar_solido()
-    axes = tronco_cone.plota_solido(util.create_figure())
+    axes = tronco_cone.plota_solido_com_faces(util.create_figure())
+    # axes = tronco_cone.plota_solido(util.create_figure())
     util.show_figure(axes)

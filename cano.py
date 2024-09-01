@@ -1,5 +1,6 @@
 import numpy as np
 import utils.utils as util
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
 class Cano(util.Solido):
@@ -134,6 +135,18 @@ class Cano(util.Solido):
                 # Adiciona arestas verticais entre as linhas de vértices
                 self.arestas.append([posicaov2, posicaov3])  # Aresta vertical entre v2 e v3
                 self.arestas.append([posicaov3, posicaov4])  # Aresta horizontal entre v3 e v4
+                
+    def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):
+        num_faces = len(self.pontosX) // 4
+        for i in range(num_faces):
+            v1 = i * 4
+            verts = [
+                [pontos[0][v1], pontos[1][v1], pontos[2][v1]],
+                [pontos[0][v1 + 1], pontos[1][v1 + 1], pontos[2][v1 + 1]],
+                [pontos[0][v1 + 2], pontos[1][v1 + 2], pontos[2][v1 + 2]],
+                [pontos[0][v1 + 3], pontos[1][v1 + 3], pontos[2][v1 + 3]]
+            ]
+            axes.add_collection3d(Poly3DCollection([verts], facecolors=cor_faces, edgecolors=cor_arestas, alpha=alpha))
 
 
 if __name__ == "__main__":
@@ -142,9 +155,9 @@ if __name__ == "__main__":
     P2 = [1, 1, 25]  # Ponto final da curva
     T1 = [1, 2, 12]  # Vetor tangente inicial
     T2 = [-3, -4, 30]  # Vetor tangente final
-    raio_cano = 0.3 # Define o raio do cano
-    resolucao_curva = 15 # mais curvo
-    num_camadas = 20 # mais redondo
+    raio_cano = 0.8 # Define o raio do cano
+    resolucao_curva = 9 # mais curvo
+    num_camadas = 9 # mais redondo
     
 
     # Criando o "cano"
@@ -155,5 +168,6 @@ if __name__ == "__main__":
     cano.gerar_solido()
 
     # Plotando o "cano"
-    axes = cano.plota_solido(util.create_figure())
+    axes = cano.plota_solido_com_faces(util.create_figure())
+    # axes = cano.plota_solido(util.create_figure())
     util.show_figure(axes)

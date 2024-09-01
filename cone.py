@@ -1,5 +1,6 @@
 import numpy as np
 import utils.utils as util
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
 class Cone(util.Solido):
@@ -48,6 +49,18 @@ class Cone(util.Solido):
             # V
             for circles in range(len(x[i])):
                 self.arestas.append([i, i + self.num_camadas * circles]) # Adiciona arestas verticais
+                
+    def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):
+        num_camadas = self.num_camadas
+        for i in range(num_camadas - 1):
+            for j in range(len(pontos[0]) // num_camadas - 1):
+                verts = [
+                    [pontos[0][i * num_camadas + j], pontos[1][i * num_camadas + j], pontos[2][i * num_camadas + j]],
+                    [pontos[0][i * num_camadas + j + 1], pontos[1][i * num_camadas + j + 1], pontos[2][i * num_camadas + j + 1]],
+                    [pontos[0][(i + 1) * num_camadas + j + 1], pontos[1][(i + 1) * num_camadas + j + 1], pontos[2][(i + 1) * num_camadas + j + 1]],
+                    [pontos[0][(i + 1) * num_camadas + j], pontos[1][(i + 1) * num_camadas + j], pontos[2][(i + 1) * num_camadas + j]]
+                ]
+                axes.add_collection3d(Poly3DCollection([verts], facecolors=cor_faces, edgecolors=cor_arestas, alpha=alpha))
 
 if __name__ == "__main__":
 
@@ -61,6 +74,7 @@ if __name__ == "__main__":
     # quantidade de pontos = num_camadas^2 
     # face representa por retangulos
     cone.gerar_solido()
-    axes = cone.plota_solido(util.create_figure())
+    axes = cone.plota_solido_com_faces(util.create_figure())
+    # axes = cone.plota_solido(util.create_figure())
     util.show_figure(axes)
 
