@@ -22,7 +22,7 @@ class Solido(ABC):
       def set_vertices_lista(self, new_vertices):
             self.pontosX, self.pontosY, self.pontosZ = new_vertices
 
-      def plota_solido_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=0.5) -> Axes:
+      def plota_solido_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
             axes, pontos = utils.plotaSolido(self, axes, cor_arestas)
             self.preencher_faces(axes, pontos, cor_faces, cor_arestas, alpha)
             return axes

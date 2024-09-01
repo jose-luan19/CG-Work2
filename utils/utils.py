@@ -28,13 +28,11 @@ def create_figure2D() -> Axes:
   axes = fig.add_subplot(111)
   return axes
 
-def calcular_media_solidos(cubeCenterMass, coneCenterMass, cilindroCenterMass, troncoCenterMass, esferaCenterMass):
-  media = (cubeCenterMass
-    + coneCenterMass
-    + cilindroCenterMass
-    + troncoCenterMass
-    + esferaCenterMass
-  ) / 5
+def calcular_media_solidos(*centros_massas):
+  # Calcula a soma de todos os elementos do array
+  soma = sum(centros_massas)
+  # Divide pela quantidade de elementos para obter a média
+  media = soma / len(centros_massas)
   return media
 
 def plotaSolido(solido: Solido, axes: Axes, cor) -> Axes:
@@ -153,21 +151,4 @@ def transladar(dx, dy, dz, solido: Solido):
   return x, y, z
 
 
-def calculateCenterMass(vertexList):
-  return np.mean(vertexList, axis=0)
 
-
-def convertWorldToCamera(vertexList, U, V, N, eye):
-  RTMatrix = np.array(
-    [
-      [U[0], U[1], U[2], -np.dot(eye, U)],
-      [V[0], V[1], V[2], -np.dot(eye, V)],
-      [N[0], N[1], N[2], -np.dot(eye, N)],
-      [0, 0, 0, 1],
-    ]
-  )
-  cameraVertexList = np.dot(
-    RTMatrix, np.concatenate([vertexList.T, np.ones((1, vertexList.shape[0]))])
-  )
-  cameraVertexList = cameraVertexList[:3].T
-  return cameraVertexList  # isso aqui é o solido transformado (já foi rotacionado e transladado)
