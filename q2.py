@@ -1,72 +1,55 @@
-import utils.utils as util
-
-from cilindro import Cilindro
+from cano import Cano
+from tronco_cone import TroncoCone
 from cone import Cone
-from cubo import Cubo
-from esfera import Esfera
-from tronco_piramide import Tronco_piramide
+import utils.utils as util
 
 axes = util.create_figure()
 
-# Cone #ROTACIONADO
-radius = 1.0
+# Cone
+radius = 2.0
 height = 2 * radius
-num_slices = 15
-ponto_inicial_cone = [9, 6, 4]
+num_slices = 10
+ponto_inicial_cone = [9, 6, 0]
 
 cone = Cone(radius, height, num_slices, ponto_inicial_cone)
 cone.gerar_solido()
-axes = cone.plota_solido(axes)
+axes = cone.plota_solido_com_faces(axes)
+cone.escalar_solido(1, 2, 3)
 cone.rotacionar_solido(90, 0, 0)
-cone.plota_solido(axes, cor = "g")
+axes = cone.plota_solido_com_faces(axes, cor_arestas="g")
 
-# Cubo #ESCALADO e DESLOCADO
-raio_cubo = 1
-ponto_inicial_cubo = [-6, -8, -7]
+# Tronco de Cone
+radius_major = 3
+radius_minor = 1
+height = 2 * radius_major
+num_slices = 10
+ponto_inicial_tronco_cone = [-9, -3, 0]
 
-cubo = Cubo(raio_cubo, ponto_inicial_cubo)
-cubo.gerar_solido()
-cubo.plota_solido(axes)
-cubo.transladar_solido(1,0,1)
-cubo.plota_solido(axes, cor = 'y')
+tronco_cone = TroncoCone(radius_major, radius_minor, height, num_slices, ponto_inicial_tronco_cone)
+tronco_cone.gerar_solido()
+axes = tronco_cone.plota_solido_com_faces(axes)
+tronco_cone.rotacionar_solido(-45, 0, 0)
+tronco_cone.escalar_solido(2, 2, 1)
+tronco_cone.transladar_solido(1, 1, -6)
+tronco_cone.plota_solido_com_faces(axes, cor_arestas="g")
 
+# Cano
+P1 = [1, 1, 0]  
+P2 = [1, 1, 8]  
+T1 = [1, 2, 4]  
+T2 = [-3, -4, 9]
+raio_cano = 1 
+resolucao_curva = 9 
+num_camadas = 9 
 
-# cubo.escalar_cubo(2, 2, 2)
-# cubo.plota_cubo()
+cano = Cano(raio_cano, P1, P2, T1, T2, resolucao_curva, num_camadas)
+cano.gerar_solido()
+axes = cano.plota_solido_com_faces(axes)
+cano.rotacionar_solido(60, 0, 30)
+cano.transladar_solido(1, -2, 3)
+cano.escalar_solido(1, 1, 2)
+axes = cano.plota_solido_com_faces(axes, cor_arestas="g")
 
-# Tronco Piramide
-tronco = Tronco_piramide(2, 1, 3, (-9, -3, -8))
-tronco.gerar_solido()
-tronco.plota_solido(axes)
-# posicao_final = (2, 3, 1)
-tronco.rotacionar_solido(45, 0, 0)
-tronco.plota_solido(axes, cor = "g")
-# tronco.plota_tronco()
-
-# Esfera
-
-# Cria um objeto Esfera com raio 1 e ponto inicial (0, 0, 0)
-esfera = Esfera(1, (7, -2, -6))
-
-# Plota a esfera original
-esfera.gerar_solido()
-esfera.plota_solido(axes)
-
-# Aplica a escala de fator 2 em todos os eixos
-esfera.escalar_solido(2, 2, 2)
-esfera.plota_solido(axes, cor = "r")
-
-# Cilindro  #ESCALADO 
-raio_cilindro = 1
-altura_cilindro = 2
-ponto_inicial_cilindro = [2, 4, 3]
-cilindro = Cilindro(raio_cilindro, altura_cilindro, ponto_inicial_cilindro)
-cilindro.gerar_solido()
-cilindro.plota_solido(axes)
-
-
-cilindro.escalar_solido(2, 2, 2,)  # esse valor 2 é o valor do "fator"
-cilindro.plota_solido(axes, cor = "r")
 
 util.show_figure(axes)
  
