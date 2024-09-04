@@ -1,3 +1,5 @@
+from matplotlib.axes import Axes
+from matplotlib.patches import Polygon
 import numpy as np
 import utils.utils as util
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -147,7 +149,25 @@ class Cano(util.Solido):
                 [pontos[0][v1 + 3], pontos[1][v1 + 3], pontos[2][v1 + 3]]
             ]
             axes.add_collection3d(Poly3DCollection([verts], facecolors=cor_faces, edgecolors=cor_arestas, alpha=alpha))
-
+        return axes
+    
+    def preencher_faces_2D(self, axes, pontos, cor_faces, cor_arestas, alpha):
+        num_faces = len(self.pontosX) // 4
+        for i in range(num_faces):
+            # Calcula os índices dos vértices para a face atual
+            v1 = i * 4
+            verts = [
+                [pontos[0][v1], pontos[1][v1]],
+                [pontos[0][v1 + 1], pontos[1][v1 + 1]],
+                [pontos[0][v1 + 2], pontos[1][v1 + 2]],
+                [pontos[0][v1 + 3], pontos[1][v1 + 3]]
+            ]
+            
+            # Cria um polígono para a face e adiciona ao eixo
+            poly = Polygon(verts, closed=True, facecolor=cor_faces, edgecolor=cor_arestas, alpha=alpha)
+            axes.add_patch(poly)
+            
+        return axes
 
 if __name__ == "__main__":
     # Definindo os parâmetros da curva de Hermite

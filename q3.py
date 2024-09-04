@@ -1,57 +1,76 @@
 import numpy as np
+from cano import Cano
+from tronco_cone import TroncoCone
 import utils.utils as util
-
-from cilindro import Cilindro
 from cone import Cone
-from cubo import Cubo
-from esfera import Esfera
-from tronco_piramide import Tronco_piramide
+
 
   
 def main():
-    # ENTRADA
-    cubo = Cubo(4, [-6, -8, -7])
-    cubo.gerar_solido()
+   # Cone
+    radius = 2.0
+    height = 2 * radius
+    num_slices = 10
+    ponto_inicial_cone = [9, 6, 0]
 
-    cone = Cone(1, 2, 5, [8, 6, 4])
+    cone = Cone(radius, height, num_slices, ponto_inicial_cone)
     cone.gerar_solido()
+    # axes = cone.plota_solido_com_faces(axes)
+    # cone.escalar_solido(1, 2, 3)
+    # cone.rotacionar_solido(90, 0, 0)
+    # axes = cone.plota_solido_com_faces(axes, cor_arestas="g")
 
-    cilindro = Cilindro(1, 2, [2, 4, 3])
-    cilindro.gerar_solido()
+    # Tronco de Cone
+    radius_major = 3
+    radius_minor = 1
+    height = 2 * radius_major
+    num_slices = 10
+    ponto_inicial_tronco_cone = [-9, -3, 0]
 
-    tronco = Tronco_piramide(2, 1, 2, [-9, -3, -8])
-    tronco.gerar_solido()
+    tronco_cone = TroncoCone(radius_major, radius_minor, height, num_slices, ponto_inicial_tronco_cone)
+    tronco_cone.gerar_solido()
+    # axes = tronco_cone.plota_solido_com_faces(axes)
+    # tronco_cone.rotacionar_solido(-45, 0, 0)
+    # tronco_cone.escalar_solido(2, 2, 1)
+    # tronco_cone.transladar_solido(1, 1, -6)
+    # tronco_cone.plota_solido_com_faces(axes, cor_arestas="g")
 
-    esfera = Esfera(1, [7, -2, -6])
-    esfera.gerar_solido()
+    # Cano
+    P1 = [1, 1, 0]  
+    P2 = [1, 1, 8]  
+    T1 = [1, 2, 4]  
+    T2 = [-3, -4, 9]
+    raio_cano = 1 
+    resolucao_curva = 9 
+    num_camadas = 9 
+
+    cano = Cano(raio_cano, P1, P2, T1, T2, resolucao_curva, num_camadas)
+    cano.gerar_solido()
+    # axes = cano.plota_solido_com_faces(axes)
 
     # Calculando os centros de massa das formas geométricas
-    cubeCenterMass = cubo.get_centro_massa()
     coneCenterMass = cone.get_centro_massa()
-    cilindroCenterMass = cilindro.get_centro_massa()
-    troncoCenterMass = tronco.get_centro_massa()
-    esferaCenterMass = esfera.get_centro_massa()
+    tronco_coneCenterMass = tronco_cone.get_centro_massa()
+    canoCenterMass = cano.get_centro_massa()
 
     # calculando a média de todos os centros para apontar a câmera
-    media_solidos = util.calcular_media_solidos(cubeCenterMass, coneCenterMass, cilindroCenterMass, troncoCenterMass, esferaCenterMass)
+    at = util.calcular_at_medio(coneCenterMass, tronco_coneCenterMass, canoCenterMass)
 
     # Posição da câmera
-    eye = np.array([-7, -1, 6])
+    eye = np.array([-10, 10, 8])
     # -7,-1,6
     # 1,-4,2
     # -2, 3, -5
 
     # Calculando os vetores N, U e V da câmera
-    U, V, N = util.calcular_vetores_aux(media_solidos, eye)
+    U, V, N = util.calcular_vetores_aux(at, eye)
 
-    cubo.convertWorldToCamera( U, V, N, eye)
-    cone.convertWorldToCamera( U, V, N, eye)
-    cilindro.convertWorldToCamera( U, V, N, eye)
-    tronco.convertWorldToCamera( U, V, N, eye)
-    esfera.convertWorldToCamera( U, V, N, eye)
+    cone.converter_para_camera( U, V, N, eye)
+    cano.converter_para_camera( U, V, N, eye)
+    tronco_cone.converter_para_camera( U, V, N, eye)
     
 
-    return cubo, cone, cilindro, tronco, esfera, (media_solidos, eye)
+    return cone, cano, tronco_cone, at, eye
 
     
 
@@ -60,15 +79,12 @@ if __name__ == "__main__":
     # Criação da figura e do subplot 3D
     ax = util.create_figure()
     
-    cubo, cone, cilindro, tronco, esfera, args = main()
-    eye, media_solidos = args
-    util.include_legend(ax, eye, media_solidos)
+    cone, cano, tronco_cone, at, eye = main()
+    util.include_legend(ax, eye, at)
     
-    ax = cubo.plota_solido(ax)
-    ax = cone.plota_solido(ax)
-    ax = cilindro.plota_solido(ax)
-    ax = tronco.plota_solido(ax)
-    ax = esfera.plota_solido(ax)
+    ax = cano.plota_solido_com_faces(ax)
+    ax = cone.plota_solido_com_faces(ax)
+    ax = tronco_cone.plota_solido_com_faces(ax)
 
     util.show_figure(ax)
     

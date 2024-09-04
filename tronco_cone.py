@@ -1,3 +1,5 @@
+from matplotlib.axes import Axes
+from matplotlib.patches import Polygon
 import numpy as np
 from cone import Cone
 import utils.utils as util
@@ -28,6 +30,8 @@ class TroncoCone(Cone):
             z_2d[i] = self.ponto_inicial[2] + z[i]  # Calcula as coordenadas z
 
         return x, y, z_2d
+    
+
 
 if __name__ == "__main__":
 

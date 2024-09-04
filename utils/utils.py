@@ -6,17 +6,20 @@ import numpy as np
 
 from utils.solido import Solido
 
-def calcular_vetores_aux(media_solidos, eye):
+def calcular_vetores_aux(at, eye):
   # Calculando os vetores N, U e V da câmera
-  at = np.array(media_solidos)
+  at = np.array(at)
   n = at - eye
   aux = np.array([0, 1, 0])
-  v = np.cross(aux, n)
-  u = np.cross(v, n)
+  u = aux - projecao(aux, n)
+  v = np.cross(u, n)
   N = n / np.linalg.norm(n)
   V = v / np.linalg.norm(v)
   U = u / np.linalg.norm(u)
   return U, V, N
+
+def projecao(a, b):
+  return (np.dot(a, b) / np.dot(b, b)) * b
   
 def create_figure() -> Axes:
   fig = plt.figure()
@@ -25,10 +28,10 @@ def create_figure() -> Axes:
 
 def create_figure2D() -> Axes:
   fig = plt.figure()
-  axes = fig.add_subplot(111)
+  axes = fig.add_subplot()
   return axes
 
-def calcular_media_solidos(*centros_massas):
+def calcular_at_medio(*centros_massas):
   # Calcula a soma de todos os elementos do array
   soma = sum(centros_massas)
   # Divide pela quantidade de elementos para obter a média
@@ -52,14 +55,15 @@ def plotaSolido2D(solido: Solido, axes: Axes, cor):
     x = [pontos[0][aresta[0]], pontos[0][aresta[1]]]
     y = [pontos[1][aresta[0]], pontos[1][aresta[1]]]
     axes.plot(x, y, cor)
-  return axes
+  return axes,pontos
 
-def include_legend(ax: Axes, eye, media_solidos):
+
+def include_legend(ax: Axes, eye, at):
   # Plot do ponto de vista da câmera
-  ax.scatter(eye[0], eye[1], eye[2], color="r", label="eye")
+  ax.scatter(eye[0], eye[1], eye[2], color="g", label="eye")
 
   # Média dos pontos
-  ax.scatter(media_solidos[0], media_solidos[1], media_solidos[2], color="y", label="at")
+  ax.scatter(at[0], at[1], at[2], color="y", label="at")
 
   # Ponto Origem do Mundo
   ax.scatter(0, 0, 0, color="m", label="origem")
