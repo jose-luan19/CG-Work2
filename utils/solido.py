@@ -53,7 +53,7 @@ class Solido(ABC):
 
       def plota_solido_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
             axes, pontos_2d = utils.plotaSolido(self, axes, cor_arestas)
-            axes = self.preencher_faces_2D(axes, pontos_2d, cor_faces, cor_arestas, alpha)
+            axes = self.preencher_faces(axes, pontos_2d, cor_faces, cor_arestas, alpha)
             return axes
 
       def plota_solido2D_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
