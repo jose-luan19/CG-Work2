@@ -7,19 +7,16 @@ import numpy as np
 from utils.solido import Solido
 
 def calcular_vetores_aux(at, eye):
-  # Calculando os vetores N, U e V da câmera
-  at = np.array(at)
-  n = at - eye
+  # # Calculando os vetores N, U e V da câmera
+  N = eye - at
+  N = N / np.linalg.norm(N)  
   aux = np.array([0, 1, 0])
-  u = aux - projecao(aux, n)
-  v = np.cross(u, n)
-  N = n / np.linalg.norm(n)
-  V = v / np.linalg.norm(v)
-  U = u / np.linalg.norm(u)
-  return U, V, N
+  U = np.cross(aux, N)
+  U = U / np.linalg.norm(U) 
+  V = np.cross(U, N)
+  V = V / np.linalg.norm(V)
 
-def projecao(a, b):
-  return (np.dot(a, b) / np.dot(b, b)) * b
+  return U, V, N
   
 def create_figure() -> Axes:
   fig = plt.figure()
@@ -32,12 +29,11 @@ def create_figure2D() -> Axes:
   return axes
 
 def calcular_at_medio(*centros_massas):
-  # Calcula a soma de todos os elementos do array
-  soma = sum(centros_massas)
-  # Divide pela quantidade de elementos para obter a média
-  media = soma / len(centros_massas)
-  return media
-
+  # Converte a lista de centros de massa para uma matriz Numpy
+  centros_massas = np.array(centros_massas)
+  # Calcula a média ao longo do eixo 0 (média entre os centros)
+  return np.mean(centros_massas, axis=0)
+  
 def plotaSolido(solido: Solido, axes: Axes, cor) -> Axes:
   # Plota o sólido definido pelos pontos e arestas no gráfico 3D.
   pontos = [solido.pontosX, solido.pontosY, solido.pontosZ]

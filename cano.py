@@ -1,9 +1,7 @@
-from matplotlib.axes import Axes
 from matplotlib.patches import Polygon
 import numpy as np
 import utils.utils as util
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
 
 class Cano(util.Solido):
     def __init__(self, raio, P1, P2, T1, T2, resolucao_curva=20, num_camadas=20):
@@ -176,8 +174,8 @@ if __name__ == "__main__":
     T1 = [1, 2, 12]  # Vetor tangente inicial
     T2 = [-3, -4, 30]  # Vetor tangente final
     raio_cano = 0.8 # Define o raio do cano
-    resolucao_curva = 9 # mais curvo
-    num_camadas = 9 # mais redondo
+    resolucao_curva = 12 # mais curvo
+    num_camadas = 15 # mais redondo
     
 
     # Criando o "cano"

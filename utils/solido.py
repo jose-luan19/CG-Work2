@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from matplotlib.axes import Axes
-from matplotlib.patches import Polygon
 import numpy as np
 
 from utils import utils
@@ -13,10 +12,6 @@ class Solido(ABC):
             self.pontosX, self.pontosY, self.pontosZ, self.arestas = [], [], [], []
             self.faces = []  # Para armazenar as faces do sólido
 
-      def get_centro_massa(self):
-            lista_vertices = self.get_vertices_lista().T
-            return np.mean(lista_vertices, axis=0)
-      
       def calcular_d(self, at, eye):
             # Calcule o vetor de visão N
             N = at - eye
@@ -29,6 +24,10 @@ class Solido(ABC):
             d = np.dot((centro_massa - eye), N)
             return d
 
+      def get_centro_massa(self):
+            lista_vertices = self.get_vertices_lista().T
+            return np.mean(lista_vertices, axis=0)
+      
       def get_vertices_lista(self):
             return np.array([self.pontosX, self.pontosY, self.pontosZ])
 
@@ -42,14 +41,6 @@ class Solido(ABC):
       @abstractmethod
       def preencher_faces_2D(self, axes, pontos_2d, cor_faces, cor_arestas, alpha):
             pass
-      
-      # def preencher_faces_2D(self, axes: Axes, cor_faces, alpha):
-      #   vertices_projetados = np.array(self.get_vertices_lista())[:2, :].T  # Use apenas x e y
-      #   for face in self.faces:
-      #       poligono = [vertices_projetados[idx] for idx in face]
-      #       poligono = Polygon(poligono, color=cor_faces, alpha=alpha)
-      #       axes.add_patch(poligono)
-      #   return axes
 
       def plota_solido_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
             axes, pontos_2d = utils.plotaSolido(self, axes, cor_arestas)
@@ -107,36 +98,61 @@ class Solido(ABC):
             self.set_vertices_lista(vertices_camera)  # Atualizar o sólido com os vértices no sistema de coordenadas da câmera
 
       def transformacao_perspectiva(self, at, eye):
-            # Projeta os vértices do sólido em um plano 2D usando a transformação em perspectiva
-            near = 0.1  # Plano de recorte próximo
-            far = 100.0  # Plano de recorte distante
-            alpha = np.pi / 2  # Ângulo de visão em radianos
+            # Projeta os vértices do sólido em um plano 2D usando a transformação em perspectiva simples
 
             # Calcule o valor de d dinamicamente
             d = self.calcular_d(at, eye)
             
+            # Obtém os vértices do sólido em coordenadas homogêneas (com 1 no final)
             lista_vertices = self.get_vertices_lista()
             matrizHomogenea = np.vstack((lista_vertices, np.ones((1, lista_vertices.shape[1]))))
+            
+            # Inicializa a matriz de vértices transformados em perspectiva
             verticesEmPerspectiva = np.zeros_like(matrizHomogenea)
 
+            # Para cada vértice, aplica a projeção em perspectiva
             for i in range(matrizHomogenea.shape[1]):
-                  z = matrizHomogenea[2, i]
-                  perspectiva = np.array([
-                        [d / (z * np.tan(alpha / 2)), 0, 0, 0],
-                        [0, d / (z * np.tan(alpha / 2)), 0, 0],
-                        [0, 0, (near + far) / (near - far), (2 * near * far) / (near - far)],
-                        [0, 0, -1, 0]
-                  ])
-                  verticesEmPerspectiva[:, i] = perspectiva @ matrizHomogenea[:, i]
-
-            # Normaliza os vértices em perspectiva
-            verticesEmPerspectiva = verticesEmPerspectiva[:-1, :] / verticesEmPerspectiva[-1, :]
+                  x, y, z = matrizHomogenea[0, i], matrizHomogenea[1, i], matrizHomogenea[2, i]
+                  
+                  # Aplica a fórmula da projeção em perspectiva
+                  verticesEmPerspectiva[0, i] = d * x / z  # x'
+                  verticesEmPerspectiva[1, i] = d * y / z  # y'
+                  verticesEmPerspectiva[2, i] = 0  # z' será 0, pois estamos projetando no plano 2D
             
-            # Preenche o terceiro array (coordenadas z) com zeros
-            verticesEmPerspectiva[2, :] = 0
-            
-            # Atualiza os vértices do sólido
+            # Atualiza os vértices do sólido com as novas coordenadas 2D projetadas
             self.set_vertices_lista(verticesEmPerspectiva[:3, :])  # Mantém apenas as coordenadas 2D (x, y)
+      
+      # def transformacao_perspectiva(self, at, eye):
+      #       # Projeta os vértices do sólido em um plano 2D usando a transformação em perspectiva
+      #       near = 0.1  # Plano de recorte próximo
+      #       far = 100.0  # Plano de recorte distante
+      #       alpha = np.pi / 2  # Ângulo de visão em radianos
+
+      #       # Calcule o valor de d dinamicamente
+      #       d = self.calcular_d(at, eye)
+            
+      #       lista_vertices = self.get_vertices_lista()
+      #       matrizHomogenea = np.vstack((lista_vertices, np.ones((1, lista_vertices.shape[1]))))
+      #       verticesEmPerspectiva = np.zeros_like(matrizHomogenea)
+
+      #       for i in range(matrizHomogenea.shape[1]):
+      #             z = matrizHomogenea[2, i]
+      #             perspectiva = np.array([
+      #                   [d / (z * np.tan(alpha / 2)), 0, 0, 0],
+      #                   [0, d / (z * np.tan(alpha / 2)), 0, 0],
+      #                   [0, 0, (near + far) / (near - far), (2 * near * far) / (near - far)],
+      #                   [0, 0, -1, 0]
+      #             ])
+      #             verticesEmPerspectiva[:, i] = perspectiva @ matrizHomogenea[:, i]
+
+      #       # Normaliza os vértices em perspectiva
+      #       verticesEmPerspectiva = verticesEmPerspectiva[:-1, :] / verticesEmPerspectiva[-1, :]
+            
+      #       # Preenche o terceiro array (coordenadas z) com zeros
+      #       verticesEmPerspectiva[2, :] = 0
+            
+      #       # Atualiza os vértices do sólido
+      #       self.set_vertices_lista(verticesEmPerspectiva[:3, :])  # Mantém apenas as coordenadas 2D (x, y)
 
       
       @abstractmethod
