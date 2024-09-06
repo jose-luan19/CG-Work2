@@ -8,7 +8,7 @@ from utils.solido import Solido
 
 def calcular_vetores_aux(at, eye):
   # # Calculando os vetores N, U e V da câmera
-  N = eye - at
+  N = at - eye
   N = N / np.linalg.norm(N)  
   aux = np.array([0, 1, 0])
   U = np.cross(aux, N)

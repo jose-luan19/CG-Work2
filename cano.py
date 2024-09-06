@@ -12,7 +12,7 @@ class Cano(util.Solido):
         self.T2 = np.array(T2)
         self.resolucao_curva = resolucao_curva
         self.num_camadas = num_camadas
-        super().__init__(self.P1)
+        super().__init__()
 
     def gerar_coordenadas(self):
         t = np.linspace(0, 1, self.resolucao_curva)  
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     T2 = [-3, -4, 30]  # Vetor tangente final
     raio_cano = 0.8 # Define o raio do cano
     resolucao_curva = 12 # mais curvo
-    num_camadas = 15 # mais redondo
+    num_camadas = 20 # mais redondo
     
 
     # Criando o "cano"

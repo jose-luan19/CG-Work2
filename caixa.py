@@ -1,17 +1,18 @@
+from matplotlib.patches import Polygon
 import numpy as np
 import utils.utils as util
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
-class CaixaAramada(util.Solido):
-    def __init__(self, lado_base_externa, altura_externa, espessura_parede, ponto_inicial, espacamento=0.1):
+class Caixa(util.Solido):
+    def __init__(self, lado_base_externa, altura_externa, espessura_parede=0.2, espacamento=0.2):
         self.lado_base_externa = lado_base_externa
         self.altura_externa = altura_externa
         self.espessura_parede = espessura_parede
         self.lado_base_interna = lado_base_externa - 2 * espessura_parede  # Define o lado da base interna
         self.altura_interna = altura_externa - 2 * espessura_parede  # Define a altura interna
         self.espaco_entre_caixas = espacamento  # Define o espaçamento entre as caixas
-        super().__init__(ponto_inicial)
+        super().__init__()
 
     def gerar_coordenadas(self, lado_base, altura, deslocamento_x=0, deslocamento_y=0):
         # Gera as coordenadas (x, y, z) de uma caixa.
@@ -114,113 +115,37 @@ class CaixaAramada(util.Solido):
         return axes
     
     def preencher_faces_2D(self, axes, pontos_2d, cor_faces, cor_arestas, alpha):
-            pass
+       # Definir as faces como listas de índices dos pontos 2D
+        faces = [
+            [0, 1, 5, 4],  # Face frontal
+            [1, 2, 6, 5],  # Face lateral direita
+            [2, 3, 7, 6],  # Face traseira
+            [3, 0, 4, 7]   # Face lateral esquerda
+        ]
+        
+        # Iterar sobre cada face e desenhar o polígono correspondente
+        for face in faces:
+            # Obter os vértices da face
+            verts = [[pontos_2d[0][i], pontos_2d[1][i]] for i in face]
+            
+            # Criar um polígono e adicioná-lo ao gráfico
+            poligono = Polygon(verts, closed=True, facecolor=cor_faces, edgecolor=cor_arestas, alpha=alpha)
+            axes.add_patch(poligono)
+
+        # Configurar o eixo para que a projeção seja adequadamente exibida
+        axes.set_aspect('equal')
+        return axes
 
 
 if __name__ == "__main__":
     # Caixa de madeira aramada com espaçamento
     lado_base_externa = 2.0  # Define o lado da base externa
     altura_externa = 3.0  # Define a altura da caixa externa
-    espessura_parede = 0.2  # Define a espessura das paredes e arestas
     ponto_inicial_caixa = [0, 0, 0]  # Define o ponto inicial da caixa
-    espacamento = 0.2  # Define o espaçamento entre as caixas
 
-    caixa_aramada = CaixaAramada(lado_base_externa, altura_externa, espessura_parede, ponto_inicial_caixa, espacamento)
-    caixa_aramada.gerar_solido()
-    
-    # Define as cores e alpha
-    cor_faces = "brown"
-    cor_arestas = "black"
-    alpha = 0.6
+    caixa = Caixa(lado_base_externa, altura_externa)
+    caixa.gerar_solido()
 
     # Pinta as faces e mostra a caixa
-    axes = caixa_aramada.plota_solido_com_faces(util.create_figure(), cor_faces=cor_faces, cor_arestas=cor_arestas, alpha=alpha)
-    util.show_figure(axes)
-
-
-
-
-
-
-
-
-
-
-
-
-'''class CaixaSemTampa(util.Solido):
-    def __init__(self, lado_base, altura, ponto_inicial):
-        self.lado_base = lado_base
-        self.altura = altura
-        super().__init__(ponto_inicial)
-
-    def gerar_coordenadas(self):
-        # Gera as coordenadas (x, y, z) da caixa.
-        x = np.array([self.ponto_inicial[0], self.ponto_inicial[0] + self.lado_base,
-                      self.ponto_inicial[0] + self.lado_base, self.ponto_inicial[0]])
-        y = np.array([self.ponto_inicial[1], self.ponto_inicial[1],
-                      self.ponto_inicial[1] + self.lado_base, self.ponto_inicial[1] + self.lado_base])
-        z_base = np.array([self.ponto_inicial[2]] * 4)  # Base
-        z_topo = np.array([self.ponto_inicial[2] + self.altura] * 4)  # Topo
-
-        return x, y, z_base, z_topo
-
-    def gerar_solido(self):
-        # Gera os pontos e arestas da caixa.
-        x, y, z_base, z_topo = self.gerar_coordenadas()
-        
-        # Pontos da base
-        for i in range(4):
-            self.pontosX.append(x[i])
-            self.pontosY.append(y[i])
-            self.pontosZ.append(z_base[i])
-
-        # Pontos do topo
-        for i in range(4):
-            self.pontosX.append(x[i])
-            self.pontosY.append(y[i])
-            self.pontosZ.append(z_topo[i])
-
-        # Arestas da base
-        for i in range(4):
-            self.arestas.append([i, (i + 1) % 4])
-
-        # Arestas do topo
-        for i in range(4):
-            self.arestas.append([i + 4, (i + 1) % 4 + 4])
-
-        # Arestas verticais (ligam base e topo)
-        for i in range(4):
-            self.arestas.append([i, i + 4])
-
-    def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):
-        # Preenche as faces da caixa.
-        for i in range(4):
-            verts = [
-                [pontos[0][i], pontos[1][i], pontos[2][i]],  # Base
-                [pontos[0][(i + 1) % 4], pontos[1][(i + 1) % 4], pontos[2][(i + 1) % 4]],  # Base
-                [pontos[0][(i + 1) % 4 + 4], pontos[1][(i + 1) % 4 + 4], pontos[2][(i + 1) % 4 + 4]],  # Topo
-                [pontos[0][i + 4], pontos[1][i + 4], pontos[2][i + 4]]  # Topo
-            ]
-            axes.add_collection3d(Poly3DCollection([verts], facecolors=cor_faces, edgecolors=cor_arestas, alpha=alpha))
-        
-        # Preenche a face da base
-        base_verts = [
-            [pontos[0][i], pontos[1][i], pontos[2][i]] for i in range(4)
-        ]
-        axes.add_collection3d(Poly3DCollection([base_verts], facecolors=cor_faces, edgecolors=cor_arestas, alpha=alpha))
-
-        return axes
-
-
-if __name__ == "__main__":
-
-    # Caixa sem tampa
-    lado_base = 1.0  # Define o lado da base quadrada
-    altura = 2.0  # Define a altura da caixa
-    ponto_inicial_caixa = [0, 0, 0]  # Define o ponto inicial da caixa
-
-    caixa = CaixaSemTampa(lado_base, altura, ponto_inicial_caixa)
-    caixa.gerar_solido()
     axes = caixa.plota_solido_com_faces(util.create_figure())
-    util.show_figure(axes)'''
+    util.show_figure(axes)

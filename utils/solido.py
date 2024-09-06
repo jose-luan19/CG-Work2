@@ -7,8 +7,8 @@ from utils import utils
 
 class Solido(ABC):
 
-      def __init__(self, ponto_inicial):
-            self.ponto_inicial = ponto_inicial
+      def __init__(self):
+            self.ponto_inicial = [0,0,0]
             self.pontosX, self.pontosY, self.pontosZ, self.arestas = [], [], [], []
             self.faces = []  # Para armazenar as faces do sólido
 
@@ -42,12 +42,12 @@ class Solido(ABC):
       def preencher_faces_2D(self, axes, pontos_2d, cor_faces, cor_arestas, alpha):
             pass
 
-      def plota_solido_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
+      def plota_solido_com_faces(self, axes: Axes, cor_faces = "brown", cor_arestas = "black", alpha = 0.7) -> Axes:
             axes, pontos_2d = utils.plotaSolido(self, axes, cor_arestas)
             axes = self.preencher_faces(axes, pontos_2d, cor_faces, cor_arestas, alpha)
             return axes
 
-      def plota_solido2D_com_faces(self, axes: Axes, cor_arestas="b", cor_faces="r", alpha=1) -> Axes:
+      def plota_solido2D_com_faces(self, axes: Axes, cor_faces = "brown", cor_arestas = "black", alpha = 0.7) -> Axes:
             # Plota o cone no gráfico 3D.
             axes, pontos = utils.plotaSolido2D(self, axes, cor_arestas)
             axes = self.preencher_faces_2D(axes, pontos, cor_faces, cor_arestas, alpha)

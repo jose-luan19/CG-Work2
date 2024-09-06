@@ -1,15 +1,13 @@
-from matplotlib.axes import Axes
-from matplotlib.patches import Polygon
 import numpy as np
 from cone import Cone
 import utils.utils as util
 
 
 class TroncoCone(Cone):
-    def __init__(self, raio_maior, raio_menor, altura, num_camadas, ponto_inicial):
+    def __init__(self, raio_maior, raio_menor, altura, num_camadas):
         self.raio_maior = raio_maior
         self.raio_menor = raio_menor
-        super().__init__(raio_maior, altura, num_camadas, ponto_inicial)
+        super().__init__(raio_maior, altura, num_camadas)
 
     def gerar_coordenadas(self):
         # Gera as coordenadas (x, y, z) do tronco de cone.
@@ -42,7 +40,7 @@ if __name__ == "__main__":
     num_camadas = 10  # Define o número de camadas para a discretização do tronco de cone
     ponto_inicial = [0, 0, 0]  # Define o ponto inicial do tronco de cone
 
-    tronco_cone = TroncoCone(raio_maior, raio_menor, altura, num_camadas, ponto_inicial)
+    tronco_cone = TroncoCone(raio_maior, raio_menor, altura, num_camadas)
     # quantidade de pontos = num_camadas^2 
     # face representa por retangulos
     tronco_cone.gerar_solido()

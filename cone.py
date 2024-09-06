@@ -7,11 +7,11 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
 class Cone(util.Solido):
-    def __init__(self, raio, altura, num_camadas, ponto_inicial):
+    def __init__(self, raio, altura, num_camadas):
         self.raio = raio
         self.altura = altura
         self.num_camadas = num_camadas
-        super().__init__(ponto_inicial)
+        super().__init__()
 
     def gerar_coordenadas(self):
         # Gera as coordenadas (x, y, z) do cone.
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     num_camadas = 10  # Define o número de camadas para a discretização do cone
     ponto_inicial_cone = [0, 0, 0]  # Define o ponto inicial do cone
 
-    cone = Cone(raio, altura, num_camadas, ponto_inicial_cone)
+    cone = Cone(raio, altura, num_camadas)
     # quantidade de pontos = num_camadas^2 
     # face representa por retangulos
     cone.gerar_solido()
