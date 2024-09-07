@@ -94,7 +94,6 @@ if __name__ == "__main__":
     raio = 1.0  # Define o raio do cone
     altura = 2 * raio  # Define a altura do cone como o dobro do raio
     num_camadas = 10  # Define o número de camadas para a discretização do cone
-    ponto_inicial_cone = [0, 0, 0]  # Define o ponto inicial do cone
 
     cone = Cone(raio, altura, num_camadas)
     # quantidade de pontos = num_camadas^2 

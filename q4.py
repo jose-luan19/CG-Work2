@@ -4,7 +4,7 @@ import utils.utils as util
  
 if __name__ == "__main__":
     
-    cone, cano, tronco_cone, caixa, at, eye = q3.main()
+    cone, cano, tronco_cone, caixa, eye, at = q3.main()
     
     tronco_cone.transformacao_perspectiva(at=at, eye=eye)
     cano.transformacao_perspectiva(at=at, eye=eye)

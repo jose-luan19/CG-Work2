@@ -11,12 +11,17 @@ def calcular_vetores_aux(at, eye):
   N = at - eye
   N = N / np.linalg.norm(N)  
   aux = np.array([0, 1, 0])
-  U = np.cross(aux, N)
-  U = U / np.linalg.norm(U) 
-  V = np.cross(U, N)
-  V = V / np.linalg.norm(V)
+  # V = aux - (np.dot(aux,N) /np.dot(N,N))
+  # V = np.cross(aux, N)
+  V = aux - projecao(aux, N)
+  V = V / np.linalg.norm(V) 
+  U = np.cross(V, N)
+  U = U / np.linalg.norm(U)
 
   return U, V, N
+
+def projecao(a, b):
+  return np.dot((np.dot(a, b) / np.dot(b, b)), b)
   
 def create_figure() -> Axes:
   fig = plt.figure()
