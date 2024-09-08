@@ -35,8 +35,8 @@ class Solido(ABC):
             self.pontosX, self.pontosY, self.pontosZ = new_vertices
 
       def plota_solido_com_faces(self, axes: Axes, cor_faces = "brown", cor_arestas = "black", alpha = 0.7) -> Axes:
-            axes, pontos_2d = utils.plotaSolido(self, axes, cor_arestas)
-            axes = self.preencher_faces(axes, pontos_2d, cor_faces, cor_arestas, alpha)
+            axes, pontos = utils.plotaSolido(self, axes, cor_arestas)
+            axes = self.preencher_faces(axes, pontos, cor_faces, cor_arestas, alpha)
             return axes
 
       def plota_solido2D_com_faces(self, axes: Axes, cor_faces = "brown", cor_arestas = "black", alpha = 0.7) -> Axes:
@@ -105,6 +105,15 @@ class Solido(ABC):
             
             # Atualiza os vértices do sólido com as novas coordenadas 2D projetadas
             self.set_vertices_lista(verticesEmPerspectiva[:3, :])  # Mantém apenas as coordenadas 2D (x, y)
+            
+      def plota_solido(self, axes: Axes, cor="b") -> Axes:
+            # Plota o cone no gráfico 3D.
+            return utils.plotaSolido(self, axes, cor)
+
+      def plota_solido2D(self, axes: Axes, cor="g") -> Axes:
+            # Plota o cone no gráfico 3D.
+            return utils.plotaSolido2D(self, axes, cor)
+
             
       @abstractmethod
       def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):

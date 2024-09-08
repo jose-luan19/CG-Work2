@@ -1,4 +1,3 @@
-import numpy as np
 from cilindro import Cilindro
 from toroide import Toroide
 import utils.utils as util

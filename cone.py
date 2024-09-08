@@ -1,5 +1,3 @@
-from matplotlib import pyplot as plt
-from matplotlib.axes import Axes
 from matplotlib.patches import Polygon
 import numpy as np
 import utils.utils as util
