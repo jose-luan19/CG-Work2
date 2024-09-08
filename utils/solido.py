@@ -33,14 +33,6 @@ class Solido(ABC):
 
       def set_vertices_lista(self, new_vertices):
             self.pontosX, self.pontosY, self.pontosZ = new_vertices
-            
-      @abstractmethod
-      def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):
-            pass
-      
-      @abstractmethod
-      def preencher_faces_2D(self, axes, pontos_2d, cor_faces, cor_arestas, alpha):
-            pass
 
       def plota_solido_com_faces(self, axes: Axes, cor_faces = "brown", cor_arestas = "black", alpha = 0.7) -> Axes:
             axes, pontos_2d = utils.plotaSolido(self, axes, cor_arestas)
@@ -52,26 +44,18 @@ class Solido(ABC):
             axes, pontos = utils.plotaSolido2D(self, axes, cor_arestas)
             axes = self.preencher_faces_2D(axes, pontos, cor_faces, cor_arestas, alpha)
             return axes
-      
-      def plota_solido(self, axes: Axes, cor="b") -> Axes:
-            # Plota o cone no gráfico 3D.
-            return utils.plotaSolido(self, axes, cor)
-
-      def plota_solido2D(self, axes: Axes, cor="g") -> Axes:
-            # Plota o cone no gráfico 3D.
-            return utils.plotaSolido2D(self, axes, cor)
-
 
       def escalar_solido(self, sx, sy, sz):
-            self.pontosX, self.pontosY, self.pontosZ = utils.escalar(sx, sy, sz, self)
+            newVertices = utils.escalar(sx, sy, sz, self)
+            self.set_vertices_lista(newVertices)
 
       def rotacionar_solido(self, angle_x, angle_y, angle_z):
-            self.pontosX, self.pontosY, self.pontosZ = utils.rotacionar(
-                  angle_x, angle_y, angle_z, self
-            )
+            newVertices = utils.rotacionar(angle_x, angle_y, angle_z, self)
+            self.set_vertices_lista(newVertices)
 
       def transladar_solido(self, dx, dy, dz):
-            self.pontosX, self.pontosY, self.pontosZ = utils.transladar(dx, dy, dz, self)
+            newVertices = utils.transladar(dx, dy, dz, self)
+            self.set_vertices_lista(newVertices)
 
       def converter_para_camera(self, U, V, N, eye):
             R = np.array(
@@ -121,39 +105,14 @@ class Solido(ABC):
             
             # Atualiza os vértices do sólido com as novas coordenadas 2D projetadas
             self.set_vertices_lista(verticesEmPerspectiva[:3, :])  # Mantém apenas as coordenadas 2D (x, y)
+            
+      @abstractmethod
+      def preencher_faces(self, axes, pontos, cor_faces, cor_arestas, alpha):
+            pass
       
-      # def transformacao_perspectiva(self, at, eye):
-      #       # Projeta os vértices do sólido em um plano 2D usando a transformação em perspectiva
-      #       near = 0.1  # Plano de recorte próximo
-      #       far = 100.0  # Plano de recorte distante
-      #       alpha = np.pi / 2  # Ângulo de visão em radianos
-
-      #       # Calcule o valor de d dinamicamente
-      #       d = self.calcular_d(at, eye)
-            
-      #       lista_vertices = self.get_vertices_lista()
-      #       matrizHomogenea = np.vstack((lista_vertices, np.ones((1, lista_vertices.shape[1]))))
-      #       verticesEmPerspectiva = np.zeros_like(matrizHomogenea)
-
-      #       for i in range(matrizHomogenea.shape[1]):
-      #             z = matrizHomogenea[2, i]
-      #             perspectiva = np.array([
-      #                   [d / (z * np.tan(alpha / 2)), 0, 0, 0],
-      #                   [0, d / (z * np.tan(alpha / 2)), 0, 0],
-      #                   [0, 0, (near + far) / (near - far), (2 * near * far) / (near - far)],
-      #                   [0, 0, -1, 0]
-      #             ])
-      #             verticesEmPerspectiva[:, i] = perspectiva @ matrizHomogenea[:, i]
-
-      #       # Normaliza os vértices em perspectiva
-      #       verticesEmPerspectiva = verticesEmPerspectiva[:-1, :] / verticesEmPerspectiva[-1, :]
-            
-      #       # Preenche o terceiro array (coordenadas z) com zeros
-      #       verticesEmPerspectiva[2, :] = 0
-            
-      #       # Atualiza os vértices do sólido
-      #       self.set_vertices_lista(verticesEmPerspectiva[:3, :])  # Mantém apenas as coordenadas 2D (x, y)
-
+      @abstractmethod
+      def preencher_faces_2D(self, axes, pontos_2d, cor_faces, cor_arestas, alpha):
+            pass
       
       @abstractmethod
       def gerar_coordenadas(self):
